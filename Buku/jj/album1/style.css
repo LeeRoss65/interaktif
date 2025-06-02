@@ -48,7 +48,7 @@ body {
 .page img{
 	width: 70%;
 	object-fit: cover;
-	margin: auto;
+	margin: 10px 25px 10px 25px;
 }
 
 .flipbook .page small{
