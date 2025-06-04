@@ -1596,7 +1596,7 @@ function CheckFinished(){
 <button id="PrevQButton" class="FuncButton" onclick="ChangeQ(-1); return false;">&lt;=</button>
 
 <span id="QNumReadout" class="QNum">&#160;</span>
-
+<button id="NextQButton" class="FuncButton" onclick="ChangeQ(1); return false;">=&gt;</button>
 
 <br />
 </div>
@@ -1623,7 +1623,7 @@ function CheckFinished(){
 
 <!-- BeginBottomNavButtons -->
 
-<div class="ExerciseContainer">
+<div class="NavButtonBar" id="BottomNavBar">
 <button class="FuncButton" onclick="location.reload()">&#160;Ulang&#160;</button>
 </div>
 <!-- EndBottomNavButtons -->
