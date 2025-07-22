@@ -1,0 +1,15 @@
+<html>
+<body><title>Menu</title>
+<title> Perbualan berdasarkan gambar</title>
+<center>
+  <br><font size=6><b> Susun sehingga menjadi ayat.</font></b>
+<iframe src="perbualan1.htm" width=1200 height="400"></iframe>
+<iframe src="perbualan2.htm" width=1200 height="400"></iframe>
+<iframe src="perbualan3.htm" width=1200 height="370"></iframe>
+<iframe src="perbualan4.htm" width=1200 height="400"></iframe>
+<iframe src="perbualan5.htm" width=1200 height="400"></iframe>
+<iframe src="perbualan6.htm" width=1200 height="400"></iframe>
+<iframe src="perbualan7.htm" width=1200 height="400"></iframe>
+
+</body>
+</html>
