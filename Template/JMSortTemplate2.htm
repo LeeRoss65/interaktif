@@ -2404,6 +2404,36 @@ function AutoHighlightRIC(RI)
 
 
 
+//CODE FOR HANDLING TIMER
+//Timer code
+var Seconds = 60;
+var Interval = null;
+
+function StartTimer(){
+	Interval = window.setInterval('DownTime()',1000);
+	document.getElementById('TimerText').style.display = 'inline';
+}
+
+function DownTime(){
+	var ss = Seconds % 60;
+	if (ss<10){
+		ss='0' + ss + '';
+	}
+
+	var mm = Math.floor(Seconds / 60);
+
+	if (document.getElementById('Timer') == null){
+		return;
+	}
+
+	document.getElementById('TimerText').innerHTML = mm + ':' + ss;
+	if (Seconds < 1){
+		window.clearInterval(Interval);
+		TimeOver = true;
+		TimesUp();
+	}
+	Seconds--;
+}
 
 
 
@@ -2435,6 +2465,8 @@ function AutoHighlightRIC(RI)
 
 </div>
 
+<div id="Timer">&#160;<span id="TimerText">&#160;&#160;</span>&#160;</div>
+	
 <div id="InstructionsDiv" class="StdDiv">
 	<div id="Instructions"></div>
 </div>
@@ -2501,3 +2533,4 @@ function AutoHighlightRIC(RI)
 
 </body>
 </html>
+
