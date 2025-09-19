@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<hotpot-jmatch-file>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <rdf:Description rdf:about="">
+    <dc:creator>Mohamad Rosli</dc:creator>
+    <dc:creator>QERE-EMUT-CPHB</dc:creator>
+    <dc:creator>Agnes Simonet</dc:creator>
+    <dc:creator>Agnès Simonet</dc:creator>
+    <dc:creator>as</dc:creator>
+    <dc:title>Mengenali Budaya Lain</dc:title>
+  </rdf:Description>
+</rdf:RDF><version>7</version>
+
+<data>
+<title>Mengenali Budaya Lain</title>
+
+<timer><seconds>60</seconds><include-timer>0</include-timer></timer>
+
+<reading>
+<include-reading>0</include-reading>
+<reading-title>Reading text</reading-title>
+<reading-text>Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.
+Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.
+Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla</reading-text>
+
+</reading>
+
+<matching-exercise>
+<default-right-item>&amp;#x263A;</default-right-item>
+
+<pair>
+<left-item><text>&amp;#x003C;img src=&quot;plotlakaran.gif&quot; width=&quot;1137&quot; height=&quot;797&quot; border=&quot;0&quot; usemap=&quot;#map&quot; /&amp;#x003E;
+
+&amp;#x003C;map name=&quot;map&quot;&amp;#x003E;
+&amp;#x003C;!-- #$-:Image map file created by GIMP Image Map plug-in --&amp;#x003E;
+&amp;#x003C;!-- #$-:GIMP Image Map plug-in by Maurits Rijk --&amp;#x003E;
+&amp;#x003C;!-- #$-:Please do not edit lines starting with &quot;#$&quot; --&amp;#x003E;
+&amp;#x003C;!-- #$VERSION:2.3 --&amp;#x003E;
+&amp;#x003C;!-- #$AUTHOR:AS --&amp;#x003E;
+&amp;#x003C;area shape=&quot;rect&quot; coords=&quot;52,110,70,128&quot; alt=&quot;Oc&amp;#x00E9;anie&quot;  nohref=&quot;nohref&quot; /&amp;#x003E;
+&amp;#x003C;area shape=&quot;rect&quot; coords=&quot;276,141,288,153&quot; alt=&quot;Afrique&quot;  nohref=&quot;nohref&quot; /&amp;#x003E;
+&amp;#x003C;area shape=&quot;rect&quot; coords=&quot;268,53,280,65&quot; alt=&quot;Europe&quot;  nohref=&quot;nohref&quot; /&amp;#x003E;
+&amp;#x003C;area shape=&quot;rect&quot; coords=&quot;60,66,72,78&quot; alt=&quot;Amerique&quot;  nohref=&quot;nohref&quot; /&amp;#x003E;
+&amp;#x003C;area shape=&quot;rect&quot; coords=&quot;390,53,402,65&quot; alt=&quot;Asie&quot;  nohref=&quot;nohref&quot; /&amp;#x003E;
+&amp;#x003C;/map&amp;#x003E;</text>
+<fixed>1</fixed>
+</left-item>
+<right-item><text>&amp;#x00A0;&amp;#x00A0;&amp;#x00A0;</text>
+<fixed>0</fixed>
+</right-item></pair>
+
+<pair>
+<left-item><text>&amp;#x003C;area shape=&quot;rect&quot; coords=&quot;156,665,176,685&quot; nohref=&quot;nohref&quot; /&amp;#x003E;</text>
+<fixed>1</fixed>
+</left-item>
+<right-item><text> Seperti biasa, guru berikan tugasan untuk diselesaikan di rumah. / selalu berlengah, suka melewat-lewatkan kerja / terlalu yakin dapat selesaikan dalam masa yang singkat...</text>
+<fixed>0</fixed>
+</right-item></pair>
+
+<pair>
+<left-item><text>&amp;#x003C;area shape=&quot;rect&quot; coords=&quot;235,467,255,487&quot; nohref=&quot;nohref&quot; /&amp;#x003E;</text>
+<fixed>1</fixed>
+</left-item>
+<right-item><text>diberi kerja kumpulan /..bertemu untuk berbincang selepas waktu sekolah &amp;#x2026; harus selesaikan projek dalam masa seminggu/ setiap anggota ada peranan dan tugas masing-masing. Saya diberikan tugas untuk mencari gambar-gambar yang sesuai untuk menyokong projek. Seperti biasa, menunggu hingga saat-saat akhir.
+</text>
+<fixed>0</fixed>
+</right-item></pair>
+
+<pair>
+<left-item><text></text>
+<fixed>1</fixed>
+</left-item>
+<right-item><text>..pada saat-saat akhir, mula cari bahan. Tiba-tiba komputer rosak/ gagal mendapatkan gambar-gambar yang sesuai. Sudah lewat malam untuk minta bantuan anggota lain. Mula panik. Malam itu tidak dapat tidur. 
+Keesokan harinya, bangun lewat dan tiba lewat di sekolah. Rakan -rakan yang lain mula risau kerana perlu buat pembentangan. 
+</text>
+<fixed>0</fixed>
+</right-item></pair>
+
+<pair>
+<left-item><text></text>
+<fixed>1</fixed>
+</left-item>
+<right-item><text></text>
+<fixed>0</fixed>
+</right-item></pair>
+
+<pair>
+<left-item><text>&amp;#x003C;area shape=&quot;rect&quot; coords=&quot;390,53,402,65&quot; alt=&quot;Asie&quot;  nohref=&quot;nohref&quot; /&amp;#x003E;</text>
+<fixed>1</fixed>
+</left-item>
+<right-item><text>Asie</text>
+<fixed>0</fixed>
+</right-item></pair>
+</matching-exercise>
+</data>
+
+<hotpot-config-file>
+<jmatch>
+<exercise-subtitle></exercise-subtitle>
+<instructions></instructions>
+<next-ex-url></next-ex-url>
+<send-email>0</send-email>
+<show-limited-questions>0</show-limited-questions>
+<questions-to-show>6</questions-to-show>
+<shuffle-questions>1</shuffle-questions>
+<separate-javascript-file>0</separate-javascript-file>
+<next-caption>Seterusnya</next-caption>
+<delete-caption>Padam</delete-caption>
+<guess-correct>Syabas !</guess-correct>
+<guess-incorrect>Cuba lagi</guess-incorrect>
+</jmatch>
+
+<global>
+<your-score-is>Anda mendapat :</your-score-is>
+<correct-indicator>&amp;#x221A;</correct-indicator>
+<incorrect-indicator>X</incorrect-indicator>
+<process-for-rtl>0</process-for-rtl>
+<include-scorm-12>1</include-scorm-12>
+<times-up>Your time is over!</times-up>
+<check-caption>&amp;#x221A;</check-caption>
+<ok-caption>Teruskan</ok-caption>
+<next-ex-caption>=&amp;#x003E;</next-ex-caption>
+<back-caption>&amp;#x003C;=</back-caption>
+<contents-caption>Index</contents-caption>
+<include-next-ex>0</include-next-ex>
+<include-contents>0</include-contents>
+<include-back>0</include-back>
+<contents-url>contents.htm</contents-url>
+<graphic-url>bg4.jpg</graphic-url>
+<font-face>Geneva,Arial,sans-serif</font-face>
+<font-size>140%</font-size>
+<page-bg-color>#ffffff</page-bg-color>
+<title-color>#000040</title-color>
+<ex-bg-color>#FFFFFF</ex-bg-color>
+<text-color>#000000</text-color>
+<link-color>#ebda94</link-color>
+<vlink-color>#d0ccd7</vlink-color>
+<nav-bar-color>#ffffff</nav-bar-color>
+<formmail-url>http://yourserver.com/cgi-bin/FormMail.pl</formmail-url>
+<email>you@yourserver.com</email>
+<name-please>Please enter your name:</name-please>
+<user-string-1>one</user-string-1>
+<user-string-2>160%</user-string-2>
+<user-string-3>three</user-string-3>
+<header-code></header-code>
+</global>
+</hotpot-config-file>
+</hotpot-jmatch-file>
