@@ -1086,12 +1086,12 @@ var listener = function(e) {
 var Punctuation = '\u002E';
 
 var Openers = '';
-var CorrectResponse = 'Correct!';
-var IncorrectResponse = 'Sorry! Try again.';
-var ThisMuchCorrect = 'This much of your answer is correct:';
-var TheseAnswersToo = 'These answers are also correct:';
+var CorrectResponse = 'Syabas!';
+var IncorrectResponse = 'Maaf, cuba lagi!';
+var ThisMuchCorrect = 'Hanya bahagian ini yang betul:';
+var TheseAnswersToo = ' :';
 var YourScoreIs = 'Anda mendapat : ';
-var NextCorrect = 'The next correct part is: ';
+var NextCorrect = ' ';
 var FeedbackWidth = 200; //default
 var ExBGColor = getComputedStyle(document.documentElement).getPropertyValue('--strExBGColor');
 var PageBGColor = getComputedStyle(document.documentElement).getPropertyValue('--strPageBGColor');
@@ -1100,7 +1100,7 @@ var TitleColor = getComputedStyle(document.documentElement).getPropertyValue('--
 var DropTotal = 3; // number of lines that will be available for dropping on
 var Gap = 4; //Gap between two segments when they're next to each other on a line
 var DropHeight = 30;
-var CapitalizeFirst = false;
+var CapitalizeFirst = true;
 var CompiledOutput = '';
 var TempSegment = '';
 var FirstSegment = -1;
@@ -1816,3 +1816,4 @@ function TimerStartUp(){
 
 </body>
 </html>
+
