@@ -17,8 +17,8 @@ body {
 }
 
 .flipbook {
-    width: 680px;
-    height:480px;
+    width: 780px;
+    height:580px;
 }
 
 .flipbook .hard {
@@ -55,4 +55,5 @@ body {
 	font-size: 14px;
     margin-bottom: 5px;
 }
+
 
