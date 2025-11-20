@@ -17,8 +17,8 @@ body {
 }
 
 .flipbook {
-    width:1020px;
-    height:1200px;
+    width:1010px;
+    height:1380px;
 }
 
 .flipbook .hard {
@@ -46,13 +46,13 @@ body {
 }
 
 .page img{
-	width: 70%;
+	width: 100%;
 	object-fit: cover;
 	margin: 0px 0px 0px 0px;
 }
 
 .flipbook .page small{
 	font-size: 14px;
-    margin-bottom: 5px;
+    margin-bottom: 1px;
 }
 
