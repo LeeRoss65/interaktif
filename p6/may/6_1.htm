@@ -4,12 +4,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 <meta name="dc:creator" content="Mohamad Rosli" />
-<meta name="dc:title" content="sebab ..... akibat....... justeru itu" />
+<meta name="dc:title" content="Kata Tanya" />
 
 
 
 <title>
-sebab ..... akibat....... justeru itu
+Kata Tanya
 </title>
 
 <!-- Made with executable version 7.0 Release 3 Build 0 -->
@@ -33,7 +33,7 @@ sebab ..... akibat....... justeru itu
 /* CSS variables for colours. */
 :root{
 	--strFontFace:       Geneva,Arial,sans-serif;
-	--strFontSize:       120%;
+	--strFontSize:       110%;
 	--strTextColor:      #000060;
 	--strTitleColor:     #000060;
 
@@ -981,7 +981,7 @@ var Penalties = 0;
 var Score = 0;
 var TimeOver = false;
 var Locked = false;
-var ShuffleQs = false;
+var ShuffleQs = true;
 var QsToShow = 0;
 var ResizeTimer = null;
 
@@ -1105,7 +1105,7 @@ var GetOverlap = function(OtherCard){
 /*
   The new V7 DragEx object replaces the arrays of old.
 */
-var V7JsonEx = '{  "ShuffleLeftItems": false,  "IsSimple": false,  "ItemsToShow": -1,  "LeftItems": [{"OrigPos": 0,     "Group": 0}, {"OrigPos": 1,     "Group": 1}, {"OrigPos": 2,     "Group": 2}, {"OrigPos": 3,     "Group": 3}, {"OrigPos": 4,     "Group": 4}, {"OrigPos": 5,     "Group": 2}],  "RightItems": [{"OrigPos": 0,     "Groups": [0], "MatchedWith": -1}, {"OrigPos": 1,     "Groups": [1], "MatchedWith": -1}, {"OrigPos": 2,     "Groups": [2], "MatchedWith": -1}, {"OrigPos": 3,     "Groups": [3], "MatchedWith": -1}, {"OrigPos": 4,     "Groups": [4], "MatchedWith": -1}, {"OrigPos": 5,     "Groups": [2], "MatchedWith": -1}]}';
+var V7JsonEx = '{  "ShuffleLeftItems": true,  "IsSimple": true,  "ItemsToShow": -1,  "LeftItems": [{"OrigPos": 0,     "Group": 0}, {"OrigPos": 1,     "Group": 1}, {"OrigPos": 2,     "Group": 2}, {"OrigPos": 3,     "Group": 3}, {"OrigPos": 4,     "Group": 4}, {"OrigPos": 5,     "Group": 5}, {"OrigPos": 6,     "Group": 6}],  "RightItems": [{"OrigPos": 0,     "Groups": [0], "MatchedWith": -1}, {"OrigPos": 1,     "Groups": [1], "MatchedWith": -1}, {"OrigPos": 2,     "Groups": [2], "MatchedWith": -1}, {"OrigPos": 3,     "Groups": [3], "MatchedWith": -1}, {"OrigPos": 4,     "Groups": [4], "MatchedWith": -1}, {"OrigPos": 5,     "Groups": [5], "MatchedWith": -1}, {"OrigPos": 6,     "Groups": [6], "MatchedWith": -1}]}';
 
 var DragEx = JSON.parse(V7JsonEx);
 
@@ -1522,14 +1522,14 @@ function CheckAnswers(){
 <!-- EndTopNavButtons -->
 
 <div class="Titles">
-	<h2 class="ExerciseTitle">sebab ..... akibat....... justeru itu</h2>
+	<h2 class="ExerciseTitle">Kata Tanya</h2>
 
 
 
 </div>
 
 <div id="InstructionsDiv" class="StdDiv">
-	<div id="Instructions"> </div>
+	<div id="Instructions"> Padankan ayat tanya yang sesuai dengan jawapan.</div>
 </div>
 
 
@@ -1560,19 +1560,21 @@ function CheckAnswers(){
 
 <!-- EndSubmissionForm -->
 
-<div id="L_0" class="CardStyle"> Pak Lebai tamak dan</div>
-<div id="L_1" class="CardStyle">Oleh sebab kenduri telah selesai,</div>
-<div id="L_2" class="CardStyle">Akibatnya,</div>
-<div id="L_3" class="CardStyle">Oleh sebab inginkan bekalan <br />makanan untuk dibawa pulang,</div>
-<div id="L_4" class="CardStyle">Kedua-dua majlis kenduri telah selesai</div>
-<div id="L_5" class="CardStyle">Akibatnya,</div>
+<div id="L_0" class="CardStyle">Bilakah awak tiba di lapangan terbang?</div>
+<div id="L_1" class="CardStyle">Apakah di dalam kotak itu?</div>
+<div id="L_2" class="CardStyle">Mengapakah awak perlu makan ubat?</div>
+<div id="L_3" class="CardStyle">Adakah ubat-ubat itu mahal?</div>
+<div id="L_4" class="CardStyle">Adakah awak juga perlu mengambil ubat <br>setiap hari?</div>
+<div id="L_5" class="CardStyle">Bagaimanakah awak dapat kekal sihat?</div>
+<div id="L_6" class="CardStyle">Berapakah usia awak sekarang?</div>
 
-<div id="R_0" class="CardStyle">ingin makan besar.</div>
-<div id="R_1" class="CardStyle">dia tidak dapat apa-apa makanan.</div>
-<div id="R_2" class="CardStyle">dia terpaksa gigit jari dan pulang ke <br />rumah kelaparan.</div>
-<div id="R_3" class="CardStyle">Pak Lebai menghadiri kedua-dua majlis kenduri.</div>
-<div id="R_4" class="CardStyle">apabila dia tiba.</div>
-<div id="R_5" class="CardStyle">dia pulang tanpa bekalan makanan.</div>
+<div id="R_0" class="CardStyle">Saya sekeluarga sampai pada jam <br />3.00 petang tadi.</div>
+<div id="R_1" class="CardStyle">Kotak ini mengandungi ubat-ubat yang <br>perlu saya makan setiap pagi.</div>
+<div id="R_2" class="CardStyle">Saya menghidap bererapa penyakit. Maklumlah <br />sudah tua.</div>
+<div id="R_3" class="CardStyle">Tidak, kerana saya terima subsidi daripada<br />pemerintah, dan saya bayar melalui Medisave.</div>
+<div id="R_4" class="CardStyle">Saya bernasib baik kerana setakat ini kesihatan<br />saya masih baik. </div>
+<div id="R_5" class="CardStyle">Saya menjaga pemakanan setiap hari dan saya<br />juga suka beriadah. Kadangkala saya berenang<br />dan ada masa pula saya berjalan pantas.</div>
+<div id="R_6" class="CardStyle">Sebenarnya, saya sama umur dengan negara<br />kita ini.</div>
 
 
 
