@@ -20,13 +20,12 @@
     <script>
         let currentQuestion = 0;
         let score = 0;
-        const questionsFile = 'https://bahan.netlify.app/p6/code/questions.txt';
         const questions = {};
         const answers = {};
 
         // Read questions from file
         function readQuestions() {
-            fetch('https://bahan.netlify.app/p6/code/questions.txt')
+            fetch('questions.txt')
                 .then(response => response.text())
                 .then(text => {
                     const lines = text.split('\n');
