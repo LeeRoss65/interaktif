@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Multiple Choice Quiz</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .question {
+        margin-bottom: 20px;
+    }
+</style>
+</head>
+<body>
+<h1>Multiple Choice Quiz</h1>
+<p id="score">Score: 0 marks</p>
+<div id="quiz-container"></div>
+<button id="nextBtn" onclick="nextQuestion()" style="display:none;">Next Question</button>
+
+<script>
+const questionsData = [
+    {
+        question: "What is the capital of France?",
+        options: ["Paris", "Lyon", "Marseille", "London"],
+        answer: "Paris"
+    },
+    {
+        question: "What is the chemical symbol for gold?",
+        options: ["Ag", "Au", "Hg", "Pb"],
+        answer: "Au"
+    },
+    {
+        question: "What is the largest planet in our solar system?",
+        options: ["Jupiter", "Saturn", "Uranus", "Neptune"],
+        answer: "Jupiter"
+    }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+let attempts = 0; // track attempts per question
+
+function shuffleOptions(options) {
+    for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+    }
+    return options;
+}
+
+function displayQuestion() {
+    attempts = 0;
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+
+    if (currentQuestionIndex >= questionsData.length) {
+        container.innerHTML = '<h2>Quiz completed!</h2>';
+        document.getElementById('nextBtn').style.display = 'none';
+        return;
+    }
+
+    const qData = questionsData[currentQuestionIndex];
+    const questionText = document.createElement('p');
+    questionText.innerText = qData.question;
+    container.appendChild(questionText);
+
+    // shuffle options
+    const options = shuffleOptions([...qData.options]);
+
+    options.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        container.appendChild(btn);
+    });
+}
+
+function checkAnswer(selectedOption) {
+    const qData = questionsData[currentQuestionIndex];
+    if (selectedOption === qData.answer) {
+        // Calculate marks based on attempts
+        let marks = 0;
+        if (attempts === 0) {
+            marks = 2;
+        } else if (attempts === 1) {
+            marks = 1;
+        } else if (attempts === 2) {
+            marks = 0.5;
+        }
+        score += marks;
+        document.getElementById('score').innerText = `Score: ${score} marks`;
+        alert(`Correct! You earned ${marks} marks.`);
+        currentQuestionIndex++;
+        document.getElementById('nextBtn').style.display = 'inline';
+    } else {
+        attempts++;
+        alert('Incorrect, try again.');
+        displayQuestion(); // re-display same question for retry
+    }
+}
+
+function nextQuestion() {
+    document.getElementById('nextBtn').style.display = 'none';
+    displayQuestion();
+}
+
+// Initialize quiz
+displayQuestion();
+</script>
+</body>
+</html>
