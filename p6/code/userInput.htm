@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Capture User Name</title>
+    <script>
+        function openWindow() {
+            var userName = document.getElementById("name").value;
+            var otherVariable = "This is another variable";
+
+            // Open a new window
+            var newWindow = window.open("", "DisplayWindow", "width=400,height=200");
+
+            // Write content into the new window
+            newWindow.document.write("<h1>Hello, " + userName + "!</h1>");
+            newWindow.document.write("<p>Another variable: " + otherVariable + "</p>");
+        }
+    </script>
+</head>
+<body>
+    <h2>Enter Your Name</h2>
+    <input type="text" id="name" placeholder="Your name" />
+    <button onclick="openWindow()">Submit</button>
+</body>
+</html>
