@@ -26,7 +26,7 @@
 
         // Read questions from file
         function readQuestions() {
-            fetch(questionsFile)
+            fetch('https://bahan.netlify.app/p6/code/questions.txt')
                 .then(response => response.text())
                 .then(text => {
                     const lines = text.split('\n');
