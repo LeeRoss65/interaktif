@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Latihan Menu</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('bg1.jpg');
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(3, 180px);
+      gap: 20px;
+    }
+
+    .icon-box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+
+    .icon-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+    }
+
+    .icon-box a {
+      text-decoration: none;
+      color: #333;
+      display: block;
+    }
+
+    .icon {
+      font-size: 50px;
+      margin-bottom: 10px;
+    }
+
+    .label {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="icon-box">
+      <a href="https://bahan.netlify.app/p4/feb/21menu.htm" target="_blank">
+        <div class="icon">📘</div>
+        <div class="label">Latihan 1</div>
+      </a>
+    </div>
+
+    <div class="icon-box">
+      <a href="https://bahan.netlify.app/p4/feb/24_peribahasa.htm" target="_blank">
+        <div class="icon">📗</div>
+        <div class="label">Latihan 2</div>
+      </a>
+    </div>
+
+    <div class="icon-box">
+      <a href="https://bahan.netlify.app/p4/feb/24menu.htm" target="_blank">
+        <div class="icon">📙</div>
+        <div class="label">Latihan 3</div>
+      </a>
+    </div>
+
+    <div class="icon-box">
+      <a href="latihan4.html" target="_blank">
+        <div class="icon">📕</div>
+        <div class="label">Latihan 4</div>
+      </a>
+    </div>
+
+    <div class="icon-box">
+      <a href="latihan5.html" target="_blank">
+        <div class="icon">📓</div>
+        <div class="label">Latihan 5</div>
+      </a>
+    </div>
+
+    <div class="icon-box">
+      <a href="latihan6.html" target="_blank">
+        <div class="icon">📔</div>
+        <div class="label">Latihan 6</div>
+      </a>
+    </div>
+
+  </div>
+
+</body>
+</html>
