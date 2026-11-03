@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drag the Words</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .game {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    #picture {
+      width: 650px;
+      height: 700px;
+      position: relative;
+      border: 2px solid #333;
+      background: #eef5ff; /* Replace with a picture if desired */
+      overflow: hidden;
+    }
+
+    .target {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #2878c8;
+      display: grid;
+      place-items: center;
+      transform: translate(-50%, -50%);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .target.correct {
+      background: #c9f7cf;
+      border-color: #218838;
+    }
+
+    #words {
+      width: 150px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .word {
+      padding: 10px;
+      background: #ffe7a3;
+      border: 1px solid #b8912f;
+      border-radius: 5px;
+      cursor: grab;
+      text-align: center;
+      user-select: none;
+    }
+
+    .word:active {
+      cursor: grabbing;
+    }
+
+    #status {
+      margin-top: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Drag each word to its numbered position</h2>
+
+  <div class="game">
+    <div id="picture" aria-label="Picture game area"></div>
+    <div id="words" aria-label="Words to drag"></div>
+  </div>
+
+  <div id="status" aria-live="polite"></div>
+
+  <script>
+    const items = [
+      { id: 1, word: "item1", x: 100, y: 50 },
+      { id: 2, word: "item2", x: 50,  y: 100 },
+      { id: 3, word: "item3", x: 120, y: 60 },
+      { id: 4, word: "item4", x: 300, y: 200 },
+      { id: 5, word: "item5", x: 400, y: 500 },
+      { id: 6, word: "item6", x: 250, y: 250 },
+      { id: 7, word: "item7", x: 550, y: 550 },
+      { id: 8, word: "item8", x: 320, y: 400 },
+      { id: 9, word: "item9", x: 480, y: 480 },
+      { id: 10, word: "item10", x: 250, y: 500 }
+    ];
+
+    const picture = document.querySelector("#picture");
+    const wordList = document.querySelector("#words");
+    const status = document.querySelector("#status");
+
+    items.forEach(item => {
+      const target = document.createElement("div");
+      target.className = "target";
+      target.textContent = item.id;
+      target.dataset.id = item.id;
+      target.style.left = `${item.x}px`;
+      target.style.top = `${item.y}px`;
+      picture.appendChild(target);
+
+      const word = document.createElement("div");
+      word.className = "word";
+      word.textContent = item.word;
+      word.draggable = true;
+      word.dataset.id = item.id;
+      wordList.appendChild(word);
+
+      word.addEventListener("dragstart", event => {
+        event.dataTransfer.setData("text/plain", item.id);
+      });
+    });
+
+    picture.addEventListener("dragover", event => {
+      event.preventDefault();
+    });
+
+    picture.addEventListener("drop", event => {
+      event.preventDefault();
+
+      const draggedId = event.dataTransfer.getData("text/plain");
+      const target = event.target.closest(".target");
+
+      if (!target) return;
+
+      if (target.dataset.id === draggedId) {
+        const word = document.querySelector(`.word[data-id="${draggedId}"]`);
+        target.textContent = word.textContent;
+        target.classList.add("correct");
+        word.remove();
+
+        if (wordList.children.length === 0) {
+          status.textContent = "Great job! You placed all 10 words correctly.";
+        }
+      } else {
+        status.textContent = "Not quite — try a different position.";
+      }
+    });
+  </script>
+</body>
+</html>
