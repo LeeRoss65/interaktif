@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Matching Pairs Game</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, sans-serif;
+      background: #f3f6fb;
+      color: #202a3a;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h1 { margin-bottom: 8px; }
+    .instructions { margin: 0 0 20px; color: #536176; }
+
+    #status {
+      min-height: 1.5em;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .column {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .item {
+      min-height: 56px;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      border: 2px solid #ccd5e3;
+      border-radius: 12px;
+      background: white;
+      font-size: 1rem;
+      user-select: none;
+      transition: background .15s, border-color .15s, transform .15s;
+    }
+
+    .draggable {
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .draggable:active { cursor: grabbing; }
+
+    .dragging {
+      opacity: .55;
+      transform: scale(.97);
+    }
+
+    .target { border-style: dashed; }
+
+    .target.over {
+      border-color: #3978e8;
+      background: #eaf1ff;
+    }
+
+    .matched {
+      border-color: #35a36a;
+      background: #e5f7ed;
+      color: #17643b;
+    }
+
+    .wrong {
+      border-color: #d94b4b;
+      background: #fff0f0;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 18px;
+      border: 0;
+      border-radius: 9px;
+      background: #3978e8;
+      color: white;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { background: #2865ce; }
+
+    @media (max-width: 560px) {
+      body { padding: 16px 10px; }
+      .board { gap: 10px; }
+      .item { padding: 10px 6px; font-size: .9rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Match the Pairs</h1>
+    <p class="instructions">
+      Drag each item on the left to its related item on the right.
+    </p>
+    <div id="status" aria-live="polite">Matched: 0 of 10</div>
+
+    <section class="board" aria-label="Matching game board">
+      <div class="column" id="left-column"></div>
+      <div class="column" id="right-column"></div>
+    </section>
+
+    <button id="restart" type="button">Restart game</button>
+  </main>
+
+  <script>
+    // Edit these pairs to use your own related items.
+    const pairs = [
+      ["Dog", "Puppy"],
+      ["Cat", "Kitten"],
+      ["Cow", "Calf"],
+      ["Horse", "Foal"],
+      ["Sheep", "Lamb"],
+      ["Frog", "Tadpole"],
+      ["Butterfly", "Caterpillar"],
+      ["Chicken", "Chick"],
+      ["Duck", "Duckling"],
+      ["Goat", "Kid"]
+    ];
+
+    const leftColumn = document.getElementById("left-column");
+    const rightColumn = document.getElementById("right-column");
+    const status = document.getElementById("status");
+
+    let matchedCount = 0;
+    let draggedItem = null;
+    let audioContext = null;
+
+    function shuffle(items) {
+      const result = [...items];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function makeItem(text, pairId, className) {
+      const element = document.createElement("div");
+      element.className = `item ${className}`;
+      element.textContent = text;
+      element.dataset.pairId = pairId;
+      return element;
+    }
+
+    function startDrag(event) {
+      if (event.button !== undefined && event.button !== 0) return;
+
+      draggedItem = event.currentTarget;
+      draggedItem.classList.add("dragging");
+
+      // Pointer events support mouse, touch, and stylus.
+      draggedItem.setPointerCapture?.(event.pointerId);
+      event.preventDefault();
+    }
+
+    function finishDrag(event) {
+      if (!draggedItem) return;
+
+      draggedItem.classList.remove("dragging");
+
+      // Find the target underneath the pointer.
+      const target = document.elementFromPoint(event.clientX, event.clientY)
+        ?.closest(".target");
+
+      if (target && !target.classList.contains("matched")) {
+        checkMatch(draggedItem, target);
+      }
+
+      draggedItem = null;
+    }
+
+    function checkMatch(source, target) {
+      if (source.dataset.pairId === target.dataset.pairId) {
+        source.classList.add("matched");
+        target.classList.add("matched");
+        source.classList.remove("draggable");
+        source.removeEventListener("pointerdown", startDrag);
+        target.classList.remove("target", "over");
+
+        matchedCount++;
+        status.textContent = matchedCount === pairs.length
+          ? "Great job — all 10 pairs matched!"
+          : `Matched: ${matchedCount} of ${pairs.length}`;
+      } else {
+        playBeep();
+        source.classList.add("wrong");
+        target.classList.add("wrong");
+        status.textContent = "Not a match. Try again!";
+
+        setTimeout(() => {
+          source.classList.remove("wrong");
+          target.classList.remove("wrong");
+          status.textContent = `Matched: ${matchedCount} of ${pairs.length}`;
+        }, 500);
+      }
+    }
+
+    function playBeep() {
+      // Create audio only after a user interaction, as required by browsers.
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+
+      audioContext ??= new AudioContextClass();
+
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = 220;
+      gain.gain.setValueAtTime(0.18, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + 0.22
+      );
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.22);
+    }
+
+    function buildGame() {
+      matchedCount = 0;
+      draggedItem = null;
+      leftColumn.replaceChildren();
+      rightColumn.replaceChildren();
+      status.textContent = `Matched: 0 of ${pairs.length}`;
+
+      const leftItems = shuffle(
+        pairs.map(([left], id) => ({ text: left, id }))
+      );
+      const rightItems = shuffle(
+        pairs.map(([, right], id) => ({ text: right, id }))
+      );
+
+      leftItems.forEach(item => {
+        const element = makeItem(item.text, item.id, "draggable");
+        element.addEventListener("pointerdown", startDrag);
+        element.addEventListener("pointerup", finishDrag);
+        leftColumn.appendChild(element);
+      });
+
+      rightItems.forEach(item => {
+        const element = makeItem(item.text, item.id, "target");
+        element.addEventListener("pointerenter", () => {
+          if (draggedItem && !element.classList.contains("matched")) {
+            element.classList.add("over");
+          }
+        });
+        element.addEventListener("pointerleave", () => {
+          element.classList.remove("over");
+        });
+        rightColumn.appendChild(element);
+      });
+    }
+
+    document.getElementById("restart").addEventListener("click", buildGame);
+    buildGame();
+  </script>
+</body>
+</html>
