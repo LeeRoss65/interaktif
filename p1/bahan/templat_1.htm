@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Matching Game</title>
+  <title>Permainan Pemadanan - Kata seerti</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -11,6 +11,7 @@
       margin: 40px auto;
       padding: 0 16px;
       color: #222;
+      background-image: ur('bg1.jpg');
     }
 
     h1, #result { text-align: center; }
@@ -77,13 +78,13 @@
   <h1>Match the Pairs</h1>
 
   <form class="name-entry" id="nameForm">
-    <input id="playerName" type="text" placeholder="Enter your name" required>
-    <button type="submit">Start</button>
+    <input id="playerName" type="text" placeholder="Nama kamu" required>
+    <button type="submit">Mula</button>
   </form>
 
-  <section id="game" aria-label="Matching game">
+  <section id="game" aria-label="Pemadanan">
     <p id="welcome"></p>
-    <p id="status" aria-live="polite">Select an item in each column.</p>
+    <p id="status" aria-live="polite">Pilih dan padankan.</p>
     <div class="columns">
       <div class="column" id="leftColumn" aria-label="First column"></div>
       <div class="column" id="rightColumn" aria-label="Second column"></div>
@@ -156,7 +157,7 @@
 
       document.getElementById("nameForm").style.display = "none";
       document.getElementById("game").style.display = "block";
-      document.getElementById("welcome").textContent = `Good luck, ${player}!`;
+      document.getElementById("welcome").textContent = `Selamat mencuba, ${player}!`;
 
       const leftItems = pairs.map((pair, index) => ({ text: pair[0], index }));
       const rightItems = shuffle(pairs.map((pair, index) => ({ text: pair[1], index })));
@@ -219,7 +220,7 @@
         attempts[leftIndex]++;
         attempts[rightIndex]++;
         playIncorrect();
-        document.getElementById("status").textContent = "Not a match. Try again.";
+        document.getElementById("status").textContent = "Silap tu. Cuba lagi.";
 
         setTimeout(() => {
           selectedLeft?.classList.remove("selected");
@@ -231,7 +232,7 @@
     }
 
     function finishGame() {
-      document.getElementById("status").textContent = "Activity complete!";
+      document.getElementById("status").textContent = "Selesailah sudah aktiviti ini.!";
       document.getElementById("result").textContent =
         `${player}, your final score is ${score} out of ${pairs.length * 2}.`;
     }
