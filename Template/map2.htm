@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drag the Words</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image:url('bg1.jpg');
+      margin: 20px;
+    }
+
+    .game {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    #picture {
+      width: 646px;
+      height: 738px;
+      position: relative;
+      border: 2px solid #333;
+      background:url('pantai1.jpg'); /* Replace with a picture if desired */
+      overflow: hidden;
+    }
+
+    .target {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #2878c8;
+      display: grid;
+      place-items: center;
+      transform: translate(-50%, -50%);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .target.correct {
+      background: #c9f7cf;
+      border-color: #218838;
+    }
+
+    #words {
+      width: 150px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .word {
+      padding: 10px;
+      background: #ffe7a3;
+      border: 1px solid #b8912f;
+      border-radius: 5px;
+      cursor: grab;
+      text-align: center;
+      user-select: none;
+    }
+
+    .word:active {
+      cursor: grabbing;
+    }
+
+    #status {
+      margin-top: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Heret perkataan yang sesuai dengan item bernombor dalam gambar.</h2>
+
+  <div class="game">
+    <div id="picture" aria-label="Picture game area"></div>
+    <div id="words" aria-label="Words to drag"></div>
+  </div>
+
+  <div id="status" aria-live="polite"></div>
+
+  <script>
+    const items = [
+      { id: 1, word: "matahari", x: 179, y: 48 },
+      { id: 2, word: "awan", x: 95,  y: 113 },
+      { id: 3, word: "burung", x: 343, y:150 },
+      { id: 4, word: "kura-kura", x: 327, y: 629 },
+      { id: 5, word: "istana pasir", x: 365, y: 444 },
+      { id: 6, word: "penyodok", x: 90, y: 679 },
+      { id: 7, word: "ketam", x: 191, y: 569 },
+      { id: 8, word: "baldi", x: 89, y: 545 },
+      { id: 9, word: "kucing", x: 472, y: 550},
+      { id: 10, word: "tin air", x: 555, y: 673 }
+    ];
+
+    const picture = document.querySelector("#picture");
+    const wordList = document.querySelector("#words");
+    const status = document.querySelector("#status");
+
+    items.forEach(item => {
+      const target = document.createElement("div");
+      target.className = "target";
+      target.textContent = item.id;
+      target.dataset.id = item.id;
+      target.style.left = `${item.x}px`;
+      target.style.top = `${item.y}px`;
+      picture.appendChild(target);
+
+      const word = document.createElement("div");
+      word.className = "word";
+      word.textContent = item.word;
+      word.draggable = true;
+      word.dataset.id = item.id;
+      wordList.appendChild(word);
+
+      word.addEventListener("dragstart", event => {
+        event.dataTransfer.setData("text/plain", item.id);
+      });
+    });
+
+    picture.addEventListener("dragover", event => {
+      event.preventDefault();
+    });
+
+    picture.addEventListener("drop", event => {
+      event.preventDefault();
+
+      const draggedId = event.dataTransfer.getData("text/plain");
+      const target = event.target.closest(".target");
+
+      if (!target) return;
+
+      if (target.dataset.id === draggedId) {
+        const word = document.querySelector(`.word[data-id="${draggedId}"]`);
+        target.textContent = word.textContent;
+        target.classList.add("correct");
+        word.remove();
+
+        if (wordList.children.length === 0) {
+          status.textContent = "Syabas! Kamu berjaya meletakkan setiap perkataan dengan betul.";
+        }
+      } else {
+        status.textContent = "Tidak tepat. Cuba sekali lagi.";
+      }
+    });
+  </script>
+</body>
+</html>
