@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Sorting Activity Builder</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4f46e5;
+            margin-top: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="number"], input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #4338ca;
+        }
+
+        button.secondary {
+            background-color: #64748b;
+            margin-top: 10px;
+        }
+
+        button.secondary:hover {
+            background-color: #475569;
+        }
+
+        .category-setup-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+        }
+
+        .item-input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .item-input-row select {
+            width: 150px;
+            flex-shrink: 0;
+        }
+
+        .item-input-row input[type="text"] {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Category Sorting Activity Builder</h1>
+
+        <!-- STEP 1 -->
+        <div id="step-1">
+            <p style="text-align: center; color: #64748b;">Set up your categories and items.</p>
+            <div class="form-group">
+                <label for="num-categories">Number of Categories (2 to 4):</label>
+                <input type="number" id="num-categories" min="2" max="4" value="2">
+            </div>
+            <div class="form-group">
+                <label for="items-per-category">Number of Items per Category (1 to 5):</label>
+                <input type="number" id="items-per-category" min="1" max="5" value="2">
+            </div>
+            <button onclick="generateInputFields()">Next: Enter Details</button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="step-2" class="hidden">
+            <p style="text-align: center; color: #64748b;">Define category titles and add text or image URLs.</p>
+            <div id="setup-fields-container"></div>
+            <button onclick="generateActivityFile()">Generate Activity File (.html)</button>
+            <button class="secondary" onclick="showStep(1)">Back</button>
+        </div>
+    </div>
+
+    <!-- Standalone Game Template with Timer -->
+    <template id="game-template">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Sorting Activity</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; color: #1e293b; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 900px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #4f46e5; margin-top: 0; }
+        .game-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f1f5f9; padding: 12px 20px; border-radius: 8px; font-weight: bold; }
+        #timer-display { color: #4f46e5; font-size: 18px; }
+        #feedback-banner { padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; font-size: 16px; }
+        .feedback-error { background-color: #fee2e2; color: #dc2626; border: 1px solid #f87171; }
+        .feedback-success { background-color: #dcfce7; color: #16a34a; border: 1px solid #4ade80; }
+        .feedback-neutral { background-color: #e0e7ff; color: #4f46e5; }
+        #item-pool { display: flex; flex-wrap: wrap; gap: 12px; min-height: 100px; padding: 15px; background: #f1f5f9; border: 2px dashed #94a3b8; border-radius: 8px; margin-bottom: 25px; justify-content: center; align-items: center; }
+        .draggable-item { background: white; border: 2px solid #4f46e5; border-radius: 8px; padding: 10px 15px; cursor: grab; user-select: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; font-weight: 500; }
+        .draggable-item img { max-width: 100px; max-height: 100px; object-fit: contain; display: block; margin: 0 auto; border-radius: 4px; }
+        #categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .category-box { border: 2px solid #cbd5e1; border-radius: 10px; background: #ffffff; min-height: 200px; display: flex; flex-direction: column; }
+        .category-box.drag-over { background-color: #eef2ff; border-color: #4f46e5; }
+        .category-header { background: #4f46e5; color: white; padding: 12px; font-weight: bold; text-align: center; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .category-content { padding: 15px; flex-grow: 1; display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; justify-content: center; }
+        .sorted-item { border-color: #16a34a; background-color: #f0fdf4; cursor: default; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Category Sorting Activity</h1>
+        <div class="game-header-bar">
+            <span>Drag each item into its correct category!</span>
+            <span id="timer-display">⏱️ Time: 0s</span>
+        </div>
+        <div id="feedback-banner" class="feedback-neutral">Get ready to sort!</div>
+        <h3>Items Pool</h3>
+        <div id="item-pool"></div>
+        <h3>Categories</h3>
+        <div id="categories-grid"></div>
+    </div>
+    <script>
+        const activityData = /*ACTIVITY_DATA_PLACEHOLDER*/;
+        const totalItems = /*TOTAL_ITEMS_PLACEHOLDER*/;
+        let solvedItems = 0;
+        let secondsElapsed = 0;
+        let timerInterval = null;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                document.getElementById("timer-display").textContent = "⏱️ Time: " + secondsElapsed + "s";
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function setBanner(text, type) {
+            let banner = document.getElementById("feedback-banner");
+            banner.textContent = text;
+            banner.className = "feedback-" + type;
+        }
+
+        function initGame() {
+            let pool = document.getElementById("item-pool");
+            let grid = document.getElementById("categories-grid");
+            pool.innerHTML = "";
+            grid.innerHTML = "";
+
+            let allItems = [];
+            activityData.forEach(cat => allItems = allItems.concat(cat.items));
+            allItems.sort(() => Math.random() - 0.5);
+
+            allItems.forEach(item => {
+                let el = document.createElement("div");
+                el.className = "draggable-item";
+                el.id = item.id;
+                el.draggable = true;
+                el.dataset.catIdx = item.catIdx;
+
+                if (item.type === "text") {
+                    el.textContent = item.content;
+                } else {
+                    let img = document.createElement("img");
+                    img.src = item.content;
+                    img.onerror = function() {
+                        el.textContent = "[Image failed to load]";
+                    };
+                    el.appendChild(img);
+                }
+
+                el.addEventListener("dragstart", e => {
+                    e.dataTransfer.setData("text/plain", item.id);
+                });
+
+                pool.appendChild(el);
+            });
+
+            activityData.forEach((cat, idx) => {
+                let box = document.createElement("div");
+                box.className = "category-box";
+
+                let header = document.createElement("div");
+                header.className = "category-header";
+                header.textContent = cat.name;
+
+                let content = document.createElement("div");
+                content.className = "category-content";
+
+                box.appendChild(header);
+                box.appendChild(content);
+
+                box.addEventListener("dragover", e => {
+                    e.preventDefault();
+                    box.classList.add("drag-over");
+                });
+                box.addEventListener("dragleave", () => box.classList.remove("drag-over"));
+
+                box.addEventListener("drop", e => {
+                    e.preventDefault();
+                    box.classList.remove("drag-over");
+                    let id = e.dataTransfer.getData("text/plain");
+                    let itemEl = document.getElementById(id);
+
+                    if (!itemEl || itemEl.classList.contains("sorted-item")) return;
+
+                    let correctIdx = parseInt(itemEl.dataset.catIdx);
+
+                    if (correctIdx === idx) {
+                        itemEl.classList.add("sorted-item");
+                        itemEl.draggable = false;
+                        content.appendChild(itemEl);
+                        solvedItems++;
+
+                        if (solvedItems === totalItems) {
+                            stopTimer();
+                            setBanner("🎉 Awesome! You sorted all items correctly in " + secondsElapsed + " seconds!", "success");
+                        } else {
+                            setBanner("✅ Correct! Placed into \"" + cat.name + "\".", "success");
+                        }
+                    } else {
+                        setBanner("❌ Incorrect! That item does not belong in \"" + cat.name + "\". Try again!", "error");
+                    }
+                });
+
+                grid.appendChild(box);
+            });
+
+            startTimer();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
+    </template>
+
+    <script>
+        function showStep(stepNum) {
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-' + stepNum).classList.remove('hidden');
+        }
+
+        function generateInputFields() {
+            const numCats = parseInt(document.getElementById('num-categories').value);
+            const numItems = parseInt(document.getElementById('items-per-category').value);
+
+            if (isNaN(numCats) || numCats < 2 || numCats > 4 || isNaN(numItems) || numItems < 1 || numItems > 5) {
+                alert("Please keep categories between 2-4 and items between 1-5.");
+                return;
+            }
+
+            const container = document.getElementById('setup-fields-container');
+            container.innerHTML = '';
+
+            for (let c = 0; c < numCats; c++) {
+                let card = document.createElement('div');
+                card.className = 'category-setup-card';
+                card.innerHTML = `
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Category ${c + 1} Name:</label>
+                        <input type="text" class="cat-name" placeholder="e.g. Fruits" required>
+                    </div>
+                    <label>Items:</label>
+                `;
+
+                for (let i = 0; i < numItems; i++) {
+                    let row = document.createElement('div');
+                    row.className = 'item-input-row';
+                    row.innerHTML = `
+                        <select onchange="onTypeChange(this)">
+                            <option value="text">Text Item</option>
+                            <option value="url">Image URL</option>
+                        </select>
+                        <input type="text" class="item-input" placeholder="Enter text or paste image URL here">
+                    `;
+                    card.appendChild(row);
+                }
+                container.appendChild(card);
+            }
+            showStep(2);
+        }
+
+        function onTypeChange(selectElem) {
+            let row = selectElem.parentElement;
+            let inputField = row.querySelector('.item-input');
+
+            if (selectElem.value === 'text') {
+                inputField.placeholder = "Enter item text";
+            } else {
+                inputField.placeholder = "Paste image URL (e.g. https://.../image.jpg)";
+            }
+        }
+
+        function generateActivityFile() {
+            let cards = document.querySelectorAll('.category-setup-card');
+            let activityData = [];
+            let totalItems = 0;
+            let idCounter = 1;
+
+            try {
+                for (let c = 0; c < cards.length; c++) {
+                    let nameField = cards[c].querySelector('.cat-name');
+                    let name = nameField.value.trim();
+                    if (!name) {
+                        alert("Please provide a name for Category " + (c + 1));
+                        return;
+                    }
+
+                    let rows = cards[c].querySelectorAll('.item-input-row');
+                    let items = [];
+
+                    for (let r = 0; r < rows.length; r++) {
+                        let type = rows[r].querySelector('select').value;
+                        let val = rows[r].querySelector('.item-input').value.trim();
+
+                        if (!val) {
+                            alert("Please fill in all inputs for category '" + name + "'.");
+                            return;
+                        }
+
+                        if (type === 'text') {
+                            items.push({ id: 'item-' + idCounter++, catIdx: c, type: 'text', content: val });
+                        } else {
+                            items.push({ id: 'item-' + idCounter++, catIdx: c, type: 'url', content: val });
+                        }
+                    }
+                    activityData.push({ name: name, items: items });
+                    totalItems += items.length;
+                }
+
+                const template = document.getElementById('game-template');
+                let templateHtml = template.innerHTML;
+
+                let finalHtml = templateHtml
+                    .replace('/*ACTIVITY_DATA_PLACEHOLDER*/', JSON.stringify(activityData))
+                    .replace('/*TOTAL_ITEMS_PLACEHOLDER*/', totalItems);
+
+                let blob = new Blob([finalHtml], { type: 'text/html' });
+                let url = URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'sorting-activity.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+            } catch (err) {
+                console.error("Error generating file:", err);
+                alert("An error occurred while generating the file.");
+            }
+        }
+    </script>
+</body>
+</html>
