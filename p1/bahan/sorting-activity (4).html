@@ -33,7 +33,7 @@
             <span>Heret ke dalam petak yang betul!</span>
             <span id="timer-display">⏱️ Masa: 0s</span>
         </div>
-        <div id="feedback-banner" class="feedback-neutral">Get ready to sort!</div>
+        <div id="feedback-banner" class="feedback-neutral">Bersedaia untuk mulakan!</div>
         <h3>Items Pool</h3>
         <div id="item-pool"></div>
         <h3>Kategori</h3>
@@ -49,7 +49,7 @@
         function startTimer() {
             timerInterval = setInterval(() => {
                 secondsElapsed++;
-                document.getElementById("timer-display").textContent = "⏱️ Time: " + secondsElapsed + "s";
+                document.getElementById("timer-display").textContent = "⏱️ Masa: " + secondsElapsed + "s";
             }, 1000);
         }
 
@@ -136,12 +136,12 @@
 
                         if (solvedItems === totalItems) {
                             stopTimer();
-                            setBanner("🎉 Awesome! You sorted all items correctly in " + secondsElapsed + " seconds!", "success");
+                            setBanner("🎉 Syabas! Kamu berjaya selesaikan dengan baik dalam masa " + secondsElapsed + " saat!", "success");
                         } else {
-                            setBanner("✅ Hebat! Sangat sesuai dengan \"" + cat.name + "\".", "success");
+                            setBanner("✅ Hebat! Pilihan kamu sesuai dengan \"" + cat.name + "\".", "success");
                         }
                     } else {
-                        setBanner("❌ Silap! Tidak sesuai dengan \"" + cat.name + "\". Cuba lagi!", "error");
+                        setBanner("❌ Silap! Pilihan itu tidak sesuai dengan \"" + cat.name + "\". Cuba lagi!", "error");
                     }
                 });
 
