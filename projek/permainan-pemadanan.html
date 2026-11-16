@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aktiviti Pemadanan</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --wrong: #b91c1c;
+      --wrong-bg: #fee2e2;
+      --selected-bg: #dbeafe;
+      --border: #cbd5e1;
+      --background: #f1f5f9;
+      --surface: #ffccff;
+      --text: #0f172a;
+      --muted: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      color: var(--text);
+      background-image: url('bg1.jpg');
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    main {
+      width: min(100%, 1000px);
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: 0 10px 30px rgb(15 23 42 / 10%);
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .instructions {
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .status {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      margin: 22px 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .game-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .column {
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .column h2 {
+      margin: 0 0 4px;
+      text-align: center;
+    }
+
+    .item {
+      display: grid;
+      min-height: 80px;
+      place-items: center;
+      overflow: hidden;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      background: #fff;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .item:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .item.selected {
+      border-color: var(--primary);
+      background: var(--selected-bg);
+      box-shadow: 0 0 0 3px rgb(37 99 235 / 18%);
+    }
+
+    .item.matched {
+      border-color: var(--success);
+      background: var(--success-bg);
+      opacity: 0.68;
+    }
+
+    .item.wrong {
+      border-color: var(--wrong);
+      background: var(--wrong-bg);
+    }
+
+    .item img {
+      display: block;
+      max-width: 100%;
+      height: 120px;
+      object-fit: contain;
+    }
+
+    .feedback {
+      min-height: 28px;
+      margin: 20px 0 0;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .controls {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    #restart {
+      padding: 10px 18px;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--primary);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    #restart:hover {
+      background: var(--primary-dark);
+    }
+
+    @media (max-width: 650px) {
+      body {
+        padding: 12px;
+      }
+
+      main {
+        padding: 16px;
+      }
+
+      .game-board {
+        gap: 12px;
+      }
+
+      .item {
+        min-height: 70px;
+        padding: 8px;
+      }
+
+      .item img {
+        height: 90px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1 id="game-title"></h1>
+
+    <p class="instructions">
+    Padankan setiap item dalam kolum A dengan kolum B. Setiap pemadanan yang tepat diberi 10 mata. 2 mata ditolak untuk setiap kesilapan.
+    </p>
+
+    <section class="status" aria-label="Game status">
+      <span>Skor: <output id="score"></output></span>
+      <span>Pemadanan yang tepat: <output id="matches">0</output>/<span id="total"></span></span>
+      <span>Cubaan: <output id="attempts">0</output></span>
+    </section>
+
+    <div class="game-board">
+      <section class="column">
+        <h2>Kolum A</h2>
+        <div id="left-column" class="column"></div>
+      </section>
+
+      <section class="column">
+        <h2>Kolum B</h2>
+        <div id="right-column" class="column"></div>
+      </section>
+    </div>
+
+    <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+
+    <div class="controls">
+      <button id="restart" type="button">Ulang Permainan</button>
+    </div>
+  </main>
+
+  <script>
+    "use strict";
+
+    const gameTitle = "Permainan Pemadanan";
+    const sourcePairs = [{"id":0,"left":"Apple","right":"Fruit"},{"id":1,"left":"Dog","right":"Animal"},{"id":2,"left":"images/sun.png","right":"Star"}];
+    const startingScore = 100;
+
+    const imagePattern =
+      /\.(avif|bmp|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i;
+
+    const leftColumn = document.querySelector("#left-column");
+    const rightColumn = document.querySelector("#right-column");
+    const scoreOutput = document.querySelector("#score");
+    const matchesOutput = document.querySelector("#matches");
+    const attemptsOutput = document.querySelector("#attempts");
+    const totalOutput = document.querySelector("#total");
+    const feedback = document.querySelector("#feedback");
+
+    let score;
+    let matches;
+    let attempts;
+    let selectedLeft = null;
+    let selectedRight = null;
+    let checking = false;
+
+    document.title = gameTitle;
+    document.querySelector("#game-title").textContent = gameTitle;
+
+    function shuffle(items) {
+      const result = [...items];
+
+      for (let index = result.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [result[index], result[randomIndex]] =
+          [result[randomIndex], result[index]];
+      }
+
+      return result;
+    }
+
+    function createContent(value) {
+      if (imagePattern.test(value)) {
+        const image = document.createElement("img");
+        image.src = value;
+        image.alt = "Matching item";
+        image.draggable = false;
+
+        image.addEventListener("error", () => {
+          const text = document.createElement("span");
+          text.textContent = value;
+          image.replaceWith(text);
+        });
+
+        return image;
+      }
+
+      const text = document.createElement("span");
+      text.textContent = value;
+      return text;
+    }
+
+    function createItem(pair, side) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "item";
+      button.dataset.id = String(pair.id);
+      button.dataset.side = side;
+
+      const value = side === "left" ? pair.left : pair.right;
+      button.append(createContent(value));
+
+      button.addEventListener("click", () => selectItem(button));
+      return button;
+    }
+
+    function selectItem(button) {
+      if (checking || button.disabled) {
+        return;
+      }
+
+      const isLeft = button.dataset.side === "left";
+      const current = isLeft ? selectedLeft : selectedRight;
+
+      if (current) {
+        current.classList.remove("selected");
+      }
+
+      button.classList.add("selected");
+
+      if (isLeft) {
+        selectedLeft = button;
+      } else {
+        selectedRight = button;
+      }
+
+      feedback.textContent = "";
+
+      if (selectedLeft && selectedRight) {
+        checkMatch();
+      }
+    }
+
+    function checkMatch() {
+      checking = true;
+      attempts += 1;
+      attemptsOutput.value = attempts;
+
+      const isMatch = selectedLeft.dataset.id === selectedRight.dataset.id;
+
+      if (isMatch) {
+        score += 10;
+        matches += 1;
+
+        selectedLeft.classList.replace("selected", "matched");
+        selectedRight.classList.replace("selected", "matched");
+        selectedLeft.disabled = true;
+        selectedRight.disabled = true;
+
+        feedback.textContent = "Tepat sekali! +10 mata.";
+        resetSelection();
+        updateStatus();
+
+        if (matches === sourcePairs.length) {
+          feedback.textContent =
+            "Selesai sudah permainan! Kamu mendapat  " + score + "mata.";
+        }
+
+        checking = false;
+        return;
+      }
+
+      score = Math.max(0, score - 2);
+      selectedLeft.classList.add("wrong");
+      selectedRight.classList.add("wrong");
+      feedback.textContent = "Tidak tepat. -2 mata.";
+      updateStatus();
+
+      const wrongLeft = selectedLeft;
+      const wrongRight = selectedRight;
+
+      window.setTimeout(() => {
+        wrongLeft.classList.remove("selected", "wrong");
+        wrongRight.classList.remove("selected", "wrong");
+        resetSelection();
+        checking = false;
+      }, 650);
+    }
+
+    function resetSelection() {
+      selectedLeft = null;
+      selectedRight = null;
+    }
+
+    function updateStatus() {
+      scoreOutput.value = score;
+      matchesOutput.value = matches;
+      attemptsOutput.value = attempts;
+    }
+
+    function startGame() {
+      score = startingScore;
+      matches = 0;
+      attempts = 0;
+      selectedLeft = null;
+      selectedRight = null;
+      checking = false;
+
+      leftColumn.replaceChildren();
+      rightColumn.replaceChildren();
+      feedback.textContent = "";
+
+      shuffle(sourcePairs).forEach((pair) => {
+        leftColumn.append(createItem(pair, "left"));
+      });
+
+      shuffle(sourcePairs).forEach((pair) => {
+        rightColumn.append(createItem(pair, "right"));
+      });
+
+      totalOutput.textContent = String(sourcePairs.length);
+      updateStatus();
+    }
+
+    document.querySelector("#restart").addEventListener("click", startGame);
+    startGame();
+  </script>
+</body>
+</html>
