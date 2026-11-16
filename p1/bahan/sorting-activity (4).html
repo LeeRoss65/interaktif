@@ -1,0 +1,158 @@
+
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Sorting Activity</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; color: #1e293b; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 900px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #4f46e5; margin-top: 0; }
+        .game-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f1f5f9; padding: 12px 20px; border-radius: 8px; font-weight: bold; }
+        #timer-display { color: #4f46e5; font-size: 18px; }
+        #feedback-banner { padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; font-size: 16px; }
+        .feedback-error { background-color: #fee2e2; color: #dc2626; border: 1px solid #f87171; }
+        .feedback-success { background-color: #dcfce7; color: #16a34a; border: 1px solid #4ade80; }
+        .feedback-neutral { background-color: #e0e7ff; color: #4f46e5; }
+        #item-pool { display: flex; flex-wrap: wrap; gap: 12px; min-height: 100px; padding: 15px; background: #f1f5f9; border: 2px dashed #94a3b8; border-radius: 8px; margin-bottom: 25px; justify-content: center; align-items: center; }
+        .draggable-item { background: white; border: 2px solid #4f46e5; border-radius: 8px; padding: 10px 15px; cursor: grab; user-select: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; font-weight: 500; }
+        .draggable-item img { max-width: 100px; max-height: 100px; object-fit: contain; display: block; margin: 0 auto; border-radius: 4px; pointer-events: none; }
+        #categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .category-box { border: 2px solid #cbd5e1; border-radius: 10px; background: #ffffff; min-height: 200px; display: flex; flex-direction: column; }
+        .category-box.drag-over { background-color: #eef2ff; border-color: #4f46e5; }
+        .category-header { background: #4f46e5; color: white; padding: 12px; font-weight: bold; text-align: center; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .category-content { padding: 15px; flex-grow: 1; display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; justify-content: center; }
+        .sorted-item { border-color: #16a34a; background-color: #f0fdf4; cursor: default; }
+    </style>
+
+
+    <div class="container">
+        <h1>Category Sorting Activity</h1>
+        <div class="game-header-bar">
+            <span>Drag each item into its correct category!</span>
+            <span id="timer-display">⏱️ Time: 0s</span>
+        </div>
+        <div id="feedback-banner" class="feedback-neutral">Get ready to sort!</div>
+        <h3>Items Pool</h3>
+        <div id="item-pool"></div>
+        <h3>Categories</h3>
+        <div id="categories-grid"></div>
+    </div>
+    <script>
+        const activityData = [{"name":"durian","items":[{"id":"item-1","catIdx":0,"type":"relative_url","content":"durian.jpg"}]},{"name":"mangga","items":[{"id":"item-2","catIdx":1,"type":"relative_url","content":"mangga.jpg"}]},{"name":"pensel","items":[{"id":"item-3","catIdx":2,"type":"relative_url","content":"pensel.jpg"}]},{"name":"pembaris","items":[{"id":"item-4","catIdx":3,"type":"relative_url","content":"pembaris.jpg"}]}];
+        const totalItems = 4;
+        let solvedItems = 0;
+        let secondsElapsed = 0;
+        let timerInterval = null;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                document.getElementById("timer-display").textContent = "⏱️ Time: " + secondsElapsed + "s";
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function setBanner(text, type) {
+            let banner = document.getElementById("feedback-banner");
+            banner.textContent = text;
+            banner.className = "feedback-" + type;
+        }
+
+        function initGame() {
+            let pool = document.getElementById("item-pool");
+            let grid = document.getElementById("categories-grid");
+            pool.innerHTML = "";
+            grid.innerHTML = "";
+
+            let allItems = [];
+            activityData.forEach(cat => allItems = allItems.concat(cat.items));
+            allItems.sort(() => Math.random() - 0.5);
+
+            allItems.forEach(item => {
+                let el = document.createElement("div");
+                el.className = "draggable-item";
+                el.id = item.id;
+                el.draggable = true;
+                el.dataset.catIdx = item.catIdx;
+
+                if (item.type === "text") {
+                    el.textContent = item.content;
+                } else {
+                    let img = document.createElement("img");
+                    img.src = item.content;
+                    img.onerror = function() {
+                        el.textContent = "[Image not found: " + item.content + "]";
+                    };
+                    el.appendChild(img);
+                }
+
+                el.addEventListener("dragstart", e => {
+                    e.dataTransfer.setData("text/plain", item.id);
+                });
+
+                pool.appendChild(el);
+            });
+
+            activityData.forEach((cat, idx) => {
+                let box = document.createElement("div");
+                box.className = "category-box";
+
+                let header = document.createElement("div");
+                header.className = "category-header";
+                header.textContent = cat.name;
+
+                let content = document.createElement("div");
+                content.className = "category-content";
+
+                box.appendChild(header);
+                box.appendChild(content);
+
+                box.addEventListener("dragover", e => {
+                    e.preventDefault();
+                    box.classList.add("drag-over");
+                });
+                box.addEventListener("dragleave", () => box.classList.remove("drag-over"));
+
+                box.addEventListener("drop", e => {
+                    e.preventDefault();
+                    box.classList.remove("drag-over");
+                    let id = e.dataTransfer.getData("text/plain");
+                    let itemEl = document.getElementById(id);
+
+                    if (!itemEl || itemEl.classList.contains("sorted-item")) return;
+
+                    let correctIdx = parseInt(itemEl.dataset.catIdx);
+
+                    if (correctIdx === idx) {
+                        itemEl.classList.add("sorted-item");
+                        itemEl.draggable = false;
+                        content.appendChild(itemEl);
+                        solvedItems++;
+
+                        if (solvedItems === totalItems) {
+                            stopTimer();
+                            setBanner("🎉 Awesome! You sorted all items correctly in " + secondsElapsed + " seconds!", "success");
+                        } else {
+                            setBanner("✅ Correct! Placed into \"" + cat.name + "\".", "success");
+                        }
+                    } else {
+                        setBanner("❌ Incorrect! That item does not belong in \"" + cat.name + "\". Try again!", "error");
+                    }
+                });
+
+                grid.appendChild(box);
+            });
+
+            startTimer();
+        }
+
+        initGame();
+    </script>
+
+
+    
