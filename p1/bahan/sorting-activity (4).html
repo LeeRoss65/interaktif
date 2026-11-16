@@ -28,15 +28,15 @@
 
 
     <div class="container">
-        <h1>Category Sorting Activity</h1>
+        <h1>Padankan</h1>
         <div class="game-header-bar">
-            <span>Drag each item into its correct category!</span>
-            <span id="timer-display">⏱️ Time: 0s</span>
+            <span>Heret ke dalam petak yang betul!</span>
+            <span id="timer-display">⏱️ Masa: 0s</span>
         </div>
         <div id="feedback-banner" class="feedback-neutral">Get ready to sort!</div>
         <h3>Items Pool</h3>
         <div id="item-pool"></div>
-        <h3>Categories</h3>
+        <h3>Kategori</h3>
         <div id="categories-grid"></div>
     </div>
     <script>
@@ -138,10 +138,10 @@
                             stopTimer();
                             setBanner("🎉 Awesome! You sorted all items correctly in " + secondsElapsed + " seconds!", "success");
                         } else {
-                            setBanner("✅ Correct! Placed into \"" + cat.name + "\".", "success");
+                            setBanner("✅ Hebat! Sangat sesuai dengan \"" + cat.name + "\".", "success");
                         }
                     } else {
-                        setBanner("❌ Incorrect! That item does not belong in \"" + cat.name + "\". Try again!", "error");
+                        setBanner("❌ Silap! Tidak sesuai dengan \"" + cat.name + "\". Cuba lagi!", "error");
                     }
                 });
 
