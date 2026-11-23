@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Activity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; padding: 2rem; }
+        .draggable-item { cursor: grab; transition: transform 0.2s; }
+        .draggable-item:active { cursor: grabbing; }
+        .draggable-item.dragging { opacity: 0.5; transform: scale(1.05); }
+        .drop-zone { border: 2px dashed #cbd5e1; transition: all 0.2s; }
+        .drop-zone.drag-over { background-color: #e2e8f0; border-color: #94a3b8; }
+        .drop-zone.correct-match { border: 2px solid #22c55e; background-color: #f0fdf4; }
+        .drop-zone.wrong-match { border: 2px solid #ef4444; background-color: #fef2f2; animation: shake 0.4s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
+    </style>
+</head>
+<body class="text-slate-800 max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-center text-indigo-600 mb-8">Matching Activity</h1>
+    
+    <!-- GAME VIEW -->
+    <div id="game-view">
+        <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <h3 class="text-xl font-bold text-slate-700">Drag to Match</h3>
+            <div class="flex gap-6 text-right">
+                <div>
+                    <span class="text-sm text-slate-500 font-medium">Time</span>
+                    <h3 class="text-2xl font-black text-slate-700" id="timer">0:00</h3>
+                </div>
+                <div>
+                    <span class="text-sm text-slate-500 font-medium">Score</span>
+                    <h3 class="text-2xl font-black text-teal-600"><span id="score">0</span> / <span id="total">0</span></h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="w-full md:w-1/2">
+                <h4 class="font-bold text-slate-700 mb-4 text-center border-b pb-2">Items</h4>
+                <div id="col-a" class="flex flex-wrap gap-3 justify-center"></div>
+            </div>
+            <div class="w-full md:w-1/2">
+                <h4 class="font-bold text-slate-700 mb-4 text-center border-b pb-2">Targets</h4>
+                <div id="col-b" class="flex flex-col gap-4"></div>
+            </div>
+        </div>
+
+        <!-- Post-Game Name Input -->
+        <div id="name-prompt" class="hidden mt-8 bg-white p-6 rounded-xl shadow-md border border-indigo-100 max-w-md mx-auto text-center">
+            <div class="text-2xl font-bold text-green-600 mb-2">🎉 Activity Complete! 🎉</div>
+            <p class="text-slate-600 mb-4">You finished in <span id="final-time" class="font-bold text-slate-800"></span>.</p>
+            <div class="text-left mb-4">
+                <label class="block text-sm font-semibold text-slate-600 mb-1">Enter your name for the leaderboard:</label>
+                <input type="text" id="player-name-input" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Your name">
+                <p id="name-error" class="text-rose-500 text-xs mt-1 hidden">Please enter your name.</p>
+            </div>
+            <button onclick="saveToLeaderboard()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg shadow transition-colors">
+                Save Score & View Leaderboard
+            </button>
+        </div>
+    </div>
+
+    <!-- LEADERBOARD VIEW -->
+    <div id="leaderboard-view" class="hidden bg-white p-8 rounded-2xl shadow-md border border-slate-200">
+        <h2 class="text-3xl font-black text-center text-slate-800 mb-2">Leaderboard</h2>
+        <p class="text-center text-slate-500 mb-6">Saved on this browser</p>
+
+        <div class="overflow-x-auto border border-slate-200 rounded-xl mb-6">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 text-slate-600 uppercase text-xs font-bold tracking-wider">
+                        <th class="p-4 border-b">Rank</th>
+                        <th class="p-4 border-b">Player</th>
+                        <th class="p-4 border-b text-center">Time</th>
+                        <th class="p-4 border-b text-right">Score</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <button onclick="resetGame()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow transition-colors">
+                Play Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const pairs = [{"id":"iyjw0oyp4","a":"1","b":"a"},{"id":"2tzrr4g7p","a":"2b","b":"b"}];
+        const STORAGE_KEY = 'matching_leaderboard_476bn2rb9';
+        let score = 0;
+        let startTime = 0;
+        let finalSeconds = 0;
+        let timerInterval;
+        let latestEntryId = null;
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function shuffle(arr) {
+            let a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function initGame() {
+            score = 0;
+            startTime = Date.now();
+            document.getElementById('score').textContent = '0';
+            document.getElementById('total').textContent = pairs.length;
+            document.getElementById('timer').textContent = '0:00';
+            document.getElementById('name-prompt').classList.add('hidden');
+            document.getElementById('game-view').classList.remove('hidden');
+            document.getElementById('leaderboard-view').classList.add('hidden');
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('timer').textContent = formatTime(elapsed);
+            }, 1000);
+
+            const aContainer = document.getElementById('col-a');
+            const bContainer = document.getElementById('col-b');
+            aContainer.innerHTML = '';
+            bContainer.innerHTML = '';
+
+            shuffle(pairs).forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'draggable-item bg-white border-2 border-indigo-200 text-indigo-700 font-bold py-2 px-4 rounded-lg shadow-sm select-none';
+                item.draggable = true;
+                item.dataset.id = p.id;
+                item.textContent = p.a;
+                
+                item.addEventListener('dragstart', function(e) {
+                    this.classList.add('dragging');
+                    e.dataTransfer.setData('text', this.dataset.id);
+                    window.draggedEl = this;
+                });
+                item.addEventListener('dragend', function() { this.classList.remove('dragging'); window.draggedEl = null; });
+                aContainer.appendChild(item);
+            });
+
+            shuffle(pairs).forEach(p => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm border border-slate-200 w-full';
+                
+                const dropZone = document.createElement('div');
+                dropZone.className = 'drop-zone flex-1 h-12 rounded-lg flex items-center justify-center bg-slate-50 text-sm text-slate-400';
+                dropZone.dataset.targetId = p.id;
+                dropZone.textContent = 'Drop here';
+                
+                dropZone.addEventListener('dragover', e => { e.preventDefault(); return false; });
+                dropZone.addEventListener('dragenter', function() { if(!this.classList.contains('correct-match')) this.classList.add('drag-over'); });
+                dropZone.addEventListener('dragleave', function() { this.classList.remove('drag-over'); });
+                
+                dropZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    if (this.classList.contains('correct-match')) return;
+                    
+                    const draggedId = e.dataTransfer.getData('text');
+                    if (draggedId === this.dataset.targetId) {
+                        this.textContent = '';
+                        window.draggedEl.draggable = false;
+                        window.draggedEl.className = 'w-full h-full flex items-center justify-center m-0 font-bold text-indigo-700';
+                        this.appendChild(window.draggedEl);
+                        this.classList.replace('bg-slate-50', 'bg-f0fdf4');
+                        this.classList.add('correct-match');
+                        score++;
+                        document.getElementById('score').textContent = score;
+                        if(score === pairs.length) {
+                            clearInterval(timerInterval);
+                            finalSeconds = Math.floor((Date.now() - startTime) / 1000);
+                            document.getElementById('final-time').textContent = formatTime(finalSeconds);
+                            document.getElementById('name-prompt').classList.remove('hidden');
+                        }
+                    } else {
+                        this.classList.add('wrong-match');
+                        setTimeout(() => this.classList.remove('wrong-match'), 400);
+                    }
+                });
+
+                const word = document.createElement('div');
+                word.className = 'flex-1 font-bold text-slate-700 text-lg py-2 px-4 bg-slate-100 rounded-lg text-center';
+                word.textContent = p.b;
+
+                row.appendChild(dropZone);
+                row.appendChild(word);
+                bContainer.appendChild(row);
+            });
+        }
+
+        function saveToLeaderboard() {
+            const nameInput = document.getElementById('player-name-input');
+            const name = nameInput.value.trim();
+            if (!name) {
+                document.getElementById('name-error').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('name-error').classList.add('hidden');
+
+            let board = [];
+            try {
+                board = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            } catch (e) {
+                board = [];
+            }
+
+            latestEntryId = Date.now();
+            board.push({
+                id: latestEntryId,
+                name: name,
+                score: score,
+                total: pairs.length,
+                time: finalSeconds
+            });
+
+            board.sort((a, b) => {
+                const scoreDiff = (b.score / b.total) - (a.score / a.total);
+                if (scoreDiff !== 0) return scoreDiff;
+                return a.time - b.time;
+            });
+
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(board));
+            } catch (e) {}
+
+            renderLeaderboard(board);
+            document.getElementById('game-view').classList.add('hidden');
+            document.getElementById('leaderboard-view').classList.remove('hidden');
+        }
+
+        function renderLeaderboard(board) {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = '';
+            board.forEach((entry, index) => {
+                const isLatest = entry.id === latestEntryId;
+                const tr = document.createElement('tr');
+                tr.className = isLatest ? 'bg-indigo-50' : 'hover:bg-slate-50';
+                tr.innerHTML = `
+                    <td class="p-4 border-b font-bold ${index === 0 ? 'text-amber-500' : 'text-slate-500'}">
+                        ${index === 0 ? '🏆 1' : index + 1}
+                    </td>
+                    <td class="p-4 border-b font-medium text-slate-800">
+                        ${entry.name}
+                        ${isLatest ? '<span class="ml-2 text-xs bg-indigo-200 text-indigo-800 px-2 py-1 rounded-full">You</span>' : ''}
+                    </td>
+                    <td class="p-4 border-b text-center text-slate-600 font-mono">
+                        ${formatTime(entry.time)}
+                    </td>
+                    <td class="p-4 border-b text-right font-bold text-slate-700">
+                        ${entry.score} / ${entry.total}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
